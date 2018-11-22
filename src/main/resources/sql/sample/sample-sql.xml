@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rsm.sample.sampleDao">
+	<select id="selectEmpList" parameterType="String" resultType="EmpListVo">
+		<![CDATA[
+	    SELECT A.EMPLOYEE_ID,
+	           A.COMMISSION_PCT,
+	           A.DEPARTMENT_ID,
+	           A.EMAIL,
+	           A.FIRST_NAME,
+	           A.JOB_ID,
+	           A.LAST_NAME,
+	           A.PHONE_NUMBER,
+	           A.SALARY,
+	           A.MANAGER_ID,
+	           A.HIRE_DATE,
+	           B.DEPARTMENT_NAME,
+	           B.LOCATION_ID
+	      FROM HR.EMPLOYEES A,
+	           HR.DEPARTMENTS B
+	     WHERE A.DEPARTMENT_ID = B.DEPARTMENT_ID
+	       AND A.DEPARTMENT_ID = #{departmentId}
+	    ]]>
+	</select>
+
+	<update id="updateEmp" parameterType="EmpSaveVo">
+	    <![CDATA[
+	    UPDATE HR.EMPLOYEES
+	       SET FIRST_NAME = #{firstName},
+	           LAST_NAME = #{lastName},
+	           PHONE_NUMBER = #{phoneNumber},
+	           JOB_ID = #{jobId},
+	           DEPARTMENT_ID = #{departmentId},
+	           MANAGER_ID = #{managerId},
+	           EMAIL = #{email},
+	           HIRE_DATE = SYSDATE              
+	     WHERE EMPLOYEE_ID = #{employeeId}
+	    ]]>
+	</update>	
+	
+	<delete id="deleteEmp" parameterType="Long">
+	    <![CDATA[
+	    DELETE 
+	      FROM HR.EMPLOYEES 	              
+	     WHERE EMPLOYEE_ID = #{employeeId}
+	    ]]> 
+	</delete>
+	
+	<insert id="insertEmp" parameterType="EmpSaveVo">
+	    <![CDATA[
+		INSERT INTO HR.EMPLOYEES (EMPLOYEE_ID, FIRST_NAME, LAST_NAME, PHONE_NUMBER, JOB_ID, DEPARTMENT_ID, MANAGER_ID, EMAIL, HIRE_DATE) 
+	         VALUES (#{employeeId}, #{firstName}, #{lastName}, #{phoneNumber}, #{jobId}, #{departmentId}, #{managerId}, #{email}, SYSDATE)
+	    ]]>      
+	</insert>	
+
+	<select id="selectDepList" resultType="DepListVo">
+		<![CDATA[
+		SELECT DEPARTMENT_ID,
+		       DEPARTMENT_NAME,
+		       MANAGER_ID,
+		       LOCATION_ID
+		  FROM HR.DEPARTMENTS
+	    ]]>
+	</select>
+
+	<select id="selectJobList" resultType="JobListVo">
+		<![CDATA[
+		SELECT JOB_ID,
+		       JOB_TITLE,
+		       MIN_SALARY,
+		       MAX_SALARY
+		  FROM HR.JOBS
+	    ]]>
+	</select>
+
+	<select id="selectDepChart" resultType="DepChartVo">
+		<![CDATA[
+		SELECT DEPARTMENT_ID, 
+		       DEPARTMENT_NAME, 
+		       SUM(DEP_CNT) "DEP_CNT"
+		  FROM (SELECT CASE WHEN RANK() OVER(ORDER BY DEP_CNT DESC) < 5 THEN
+		                DEPARTMENT_ID
+		               ELSE
+		                999
+		               END "DEPARTMENT_ID",
+		               CASE WHEN RANK() OVER(ORDER BY DEP_CNT DESC) < 5 THEN
+		                DEPARTMENT_NAME
+		               ELSE
+		                'Etc'
+		               END "DEPARTMENT_NAME",
+		               DEP_CNT
+		          FROM (SELECT A.DEPARTMENT_ID, 
+		                       B.DEPARTMENT_NAME, 
+		                       COUNT(1) DEP_CNT
+		                  FROM HR.EMPLOYEES A,
+		                       HR.DEPARTMENTS B
+		                 WHERE A.DEPARTMENT_ID = B.DEPARTMENT_ID      
+		                 GROUP BY A.DEPARTMENT_ID, B.DEPARTMENT_NAME
+		                 ORDER BY 3 DESC ) )
+		GROUP BY DEPARTMENT_ID, DEPARTMENT_NAME  
+	    ]]>
+	</select>
+
+	<select id="selectJobChart" resultType="JobChartVo">
+		<![CDATA[
+		SELECT JOB_ID, 
+		       JOB_TITLE, 
+		       SUM(JOB_CNT) "JOB_CNT"
+		  FROM (SELECT CASE WHEN RANK() OVER(ORDER BY JOB_CNT DESC) < 3 THEN
+		                JOB_ID
+		               ELSE
+		                'ETC'
+		               END "JOB_ID",
+		               CASE WHEN RANK() OVER(ORDER BY JOB_CNT DESC) < 3 THEN
+		                JOB_TITLE
+		               ELSE
+		                'Etc'
+		               END "JOB_TITLE",
+		               JOB_CNT
+		          FROM (SELECT A.JOB_ID, 
+		                       B.JOB_TITLE, 
+		                       COUNT(1) JOB_CNT
+		                  FROM HR.EMPLOYEES A,
+		                       HR.JOBS B
+		                 WHERE A.JOB_ID = B.JOB_ID      
+		                 GROUP BY A.JOB_ID, B.JOB_TITLE
+		                 ORDER BY 3 DESC ) )
+		GROUP BY JOB_ID, JOB_TITLE  
+	    ]]>
+	</select>
+	
+</mapper>
