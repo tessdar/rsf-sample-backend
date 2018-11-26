@@ -6,9 +6,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,7 +41,7 @@ public class SampleCtrl {
 	@Autowired
 	private MessageReturn messageReturn;
 
-	@RequestMapping(value = "list", method = RequestMethod.GET)
+	@GetMapping(path = {"/list"})
 	@ResponseBody
 	public ResponseEntity<List<EmpListVo>> getEmpList(@RequestParam("departmentId") String departmentId) {
 
@@ -48,7 +50,7 @@ public class SampleCtrl {
 		return messageReturn.getRestRespList(empLists);
 	}
 
-	@RequestMapping(value = "save", method = RequestMethod.POST, consumes = "application/json")
+	@PostMapping(path = "/save", consumes = "application/json")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> setEmp(@RequestBody List<EmpSaveVo> vos) {
 
@@ -64,7 +66,7 @@ public class SampleCtrl {
 		return messageReturn.getRestResp(result, msg);
 	}
 
-	@RequestMapping(value = "del", method = RequestMethod.POST)
+	@PostMapping(path = "/del", consumes = "application/json")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> delEmp(@RequestBody List<EmpSaveVo> vos) {
 
@@ -80,7 +82,7 @@ public class SampleCtrl {
 		return messageReturn.getRestResp(result, msg);
 	}
 
-	@RequestMapping(value = "ins", method = RequestMethod.PUT, consumes = "application/json")
+	@PutMapping(path = "/ins", consumes = "application/json")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> insEmp(@RequestBody List<EmpSaveVo> vos) {
 
@@ -96,7 +98,7 @@ public class SampleCtrl {
 		return messageReturn.getRestResp(result, msg);
 	}
 
-	@RequestMapping(value = "dep", method = RequestMethod.GET)
+	@GetMapping(path = "/dep")
 	@ResponseBody
 	public ResponseEntity<List<DepListVo>> getDepList() {
 
@@ -105,7 +107,7 @@ public class SampleCtrl {
 		return messageReturn.getRestRespList(depLists);
 	}
 
-	@RequestMapping(value = "job", method = RequestMethod.GET)
+	@GetMapping(path = "/job")
 	@ResponseBody
 	public ResponseEntity<List<JobListVo>> getJobList() {
 
@@ -114,7 +116,7 @@ public class SampleCtrl {
 		return messageReturn.getRestRespList(jobLists);
 	}
 
-	@RequestMapping(value = "depChart", method = RequestMethod.GET)
+	@GetMapping(path = "/depChart")
 	@ResponseBody
 	public ResponseEntity<List<DepChartVo>> getDepChart() {
 
@@ -123,7 +125,7 @@ public class SampleCtrl {
 		return messageReturn.getRestRespList(depCharts);
 	}
 
-	@RequestMapping(value = "jobChart", method = RequestMethod.GET)
+	@GetMapping(path = "/jobChart")
 	@ResponseBody
 	public ResponseEntity<List<JobChartVo>> getJobChart() {
 

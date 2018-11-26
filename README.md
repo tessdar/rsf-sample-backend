@@ -206,93 +206,40 @@ Product Versions: Java 1.8, Tomcat 9.0, Spring 4.3.14, MyBatis 3.4.5 <br/>
 	</mvc:interceptors>
 ```
 
-### 컴포넌트 스캔을 하기위한 패키지를 설정한다. 
+### Spring JTA 트랜젝션을 설정한다.
+
+* JtaTransactionManager 빈을 설정 <br/>
 
 ```
-	<context:component-scan base-package="com.rsm.sample" />
-	<context:component-scan base-package="com.rsm.common.util" />
-	<context:component-scan base-package="com.rsm.common.security" />
-```
-
-### Atomikos JTA 트랜젝션을 설정한다.
-
-* beans profile: 실행환경에 맞추어 설정한다. 개발인 경우 DEV 설정 후 접속정보를 개발 DB로 설정하고 <br/>
-  운영인 경우 PRD로 설정 후 접속정보를 운영 DB로 설정한다. <br/>
-* com.atomikos.icatch.log_base_dir: 트랜젝션 로그파일이 저장되는 경로를 설정한다. <br/>
-  폴더 권한에 주의해야 한다. 유저그룹에 쓰기, 읽기 권한이 반드시 있어야 한다. 666 권한 설정을 추천한다.
-
-```
-	<!-- Configuration Atomikos -->
-	<beans profile="DEV">
-		<bean id="userTransactionService" class="com.atomikos.icatch.config.UserTransactionServiceImp"
-			init-method="init" destroy-method="shutdownForce">
-			<constructor-arg>
-				<!-- IMPORTANT: specify all Atomikos properties here -->
-				<props>
-					<prop key="com.atomikos.icatch.service">
-						com.atomikos.icatch.standalone.UserTransactionServiceFactory
-					</prop>
-					<prop key="com.atomikos.icatch.log_base_dir">/Users/kimwonchul/atomikos</prop>
-				</props>
-			</constructor-arg>
-		</bean>
-	</beans>	
-	<beans profile="PRD">
-	   ...
-	</beans>
-
-	<!-- Construct Atomikos UserTransactionManager, needed to configure Spring -->
-	<beans>
-		<bean id="AtomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager"
-			init-method="init" destroy-method="close" depends-on="userTransactionService">
-
-			<!-- IMPORTANT: disable startup because the userTransactionService above 
-				does this -->
-			<property name="startupTransactionService" value="false" />
-
-			<!-- when close is called, should we force transactions to terminate or 
-				not? -->
-			<property name="forceShutdown" value="false" />
-		</bean>
-
-		<!-- Also use Atomikos UserTransactionImp, needed to configure Spring -->
-		<bean id="AtomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp"
-			depends-on="userTransactionService">
-			<property name="transactionTimeout" value="300" />
-		</bean>
-
-		<!-- Configure the Spring framework to use JTA transactions from Atomikos -->
-		<bean id="JtaTransactionManager"
-			class="org.springframework.transaction.jta.JtaTransactionManager"
-			depends-on="userTransactionService">
-			<property name="transactionManager" ref="AtomikosTransactionManager" />
-			<property name="userTransaction" ref="AtomikosUserTransaction" />
-		</bean>
+	<!-- Configure the Spring framework to use JTA transactions -->
+	<bean id="JtaTransactionManager"
+		class="org.springframework.transaction.jta.JtaTransactionManager">
+	</bean>
 ```
 
 * 트랜젝션 Advice를 설정한다. get으로 시작하는 메서드는 read-only로 설정한다. (SELECT) <br/>
-  그 외 메서드는 Exception 발생 시 Rollback 처리가 되도록 한다. 
+  set으로 시작하는 메서드는 Exception 발생 시 Rollback 처리가 되도록 한다. 
 
 ```
-		<!-- tx Advice -->
-		<tx:advice id="txAdvice" transaction-manager="JtaTransactionManager">
-			<tx:attributes>
-				<tx:method name="get*" read-only="true" />
-				<tx:method name="*" propagation="REQUIRED" rollback-for="Exception" />
-			</tx:attributes>
-		</tx:advice>
+	<!-- tx Advice -->
+	<tx:advice id="txAdvice" transaction-manager="JtaTransactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="set*" propagation="REQUIRED" rollback-for="Exception" />
+		</tx:attributes>
+	</tx:advice>
 ```
 
 * 트랜젝션 AOP를 설정한다. service 클래스에 앞서 설정한 트랜젝션 Advice가 설정되도록 한다. 
 
 ```
-		<!-- tx AOP -->
-		<aop:config>
-			<aop:pointcut id="txAdvisePointCut"
-				expression="execution(* com.rsm.sample.service.*Service.*(..))" />
-			<aop:advisor id="transactionAdvisor" pointcut-ref="txAdvisePointCut"
-				advice-ref="txAdvice" />
-		</aop:config>
+	<!-- tx AOP -->
+	<aop:config>
+		<aop:pointcut id="txAdvisePointCut"
+			expression="execution(* com.rsm.sample.service.*Service.*(..))" />
+		<aop:advisor id="transactionAdvisor" pointcut-ref="txAdvisePointCut"
+			advice-ref="txAdvice" />
+	</aop:config>
 ```
 
 ### cache를 설정한다.
@@ -316,6 +263,14 @@ Product Versions: Java 1.8, Tomcat 9.0, Spring 4.3.14, MyBatis 3.4.5 <br/>
 			</beans:set>
 		</beans:property>
 	</beans:bean>
+```
+
+### 컴포넌트 스캔을 하기위한 패키지를 설정한다. 
+
+```
+	<context:component-scan base-package="com.rsm.sample" />
+	<context:component-scan base-package="com.rsm.common.util" />
+	<context:component-scan base-package="com.rsm.common.security" />
 ```
 
 ### 스캐줄러를 설정한다.
@@ -543,7 +498,7 @@ Product Versions: Java 1.8, Tomcat 9.0, Spring 4.3.14, MyBatis 3.4.5 <br/>
     * dao 인스턴스의 메서드 실행하여 정상적으로 데이터가 저장되면 저장 성공 메시지가 리턴되도록 한다.      
            
 ```           
-	public String setEmp(List<EmpSaveVo> vos) {
+	public String setEmp(List<EmpSaveVo> vos) throws Exception {
 
 		try {
 
@@ -562,8 +517,8 @@ Product Versions: Java 1.8, Tomcat 9.0, Spring 4.3.14, MyBatis 3.4.5 <br/>
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			return MessageProp.ERR_SAVE.getMsg();
+			logger.error(e.getMessage());
+			throw new Exception(MessageProp.ERR_SAVE.getMsg());
 		}
 
 		return MessageProp.INFO_SAVE.getMsg();
@@ -676,9 +631,14 @@ Product Versions: Java 1.8, Tomcat 9.0, Spring 4.3.14, MyBatis 3.4.5 <br/>
 ```    
 	public ResponseEntity<Map<String, Object>> setEmp(@RequestBody List<EmpSaveVo> vos) {
 
-		msg = service.setEmp(vos);
+		result.clear();
+		try {
+			msg = service.setEmp(vos);
+		} catch (Exception e) {
+			msg = e.getMessage();
+		}
 
-		result = messageTrans.getMapLang(msg, lang);
+		result = messageTrans.getMapLang(msg);
 
 		return messageReturn.getRestResp(result, msg);
 	}           

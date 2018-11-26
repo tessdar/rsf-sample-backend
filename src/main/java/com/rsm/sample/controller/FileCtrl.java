@@ -16,8 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,8 +32,8 @@ import com.rsm.common.vo.FileInfoVo;
 public class FileCtrl {
 
 	public static final String DIRECTORY = "/Users/kimwonchul/atomikos";
-
-	@RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	
+	@PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<FileInfoVo> upload(HttpServletRequest request) {
 
 		MultipartHttpServletRequest mpsr = (MultipartHttpServletRequest) request;
@@ -62,7 +64,7 @@ public class FileCtrl {
 		return new ResponseEntity<FileInfoVo>(fileInfo, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/download", method = RequestMethod.GET)
+	@GetMapping(path = "/download")
 	public void download(HttpServletResponse response, @RequestParam("file") String fileName) {
 		File file = new File(DIRECTORY + File.separator + fileName);
 
@@ -93,7 +95,7 @@ public class FileCtrl {
 		}
 	}
 
-	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+	@DeleteMapping(path = "/delete")
 	public ResponseEntity<FileInfoVo> delete(@RequestParam("file") String fileName) {
 
 		File file = new File(DIRECTORY + File.separator + fileName);

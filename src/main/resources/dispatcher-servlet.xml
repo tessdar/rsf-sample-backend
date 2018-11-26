@@ -81,8 +81,7 @@
 	</aop:config>
 
 	<!-- Cache -->
-	<cache:annotation-driven
-		cache-manager="cacheManager" />
+	<cache:annotation-driven cache-manager="cacheManager" />
 
 	<bean id="cacheManager"
 		class="org.springframework.cache.support.SimpleCacheManager">
