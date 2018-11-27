@@ -49,25 +49,26 @@ public class LoginCtrl {
 
 	@PostMapping(path = "/send-push", consumes = "application/json")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> sendPush() {
+	public ResponseEntity<Map<String, Object>> sendPush(@RequestBody String pushBody) {
 
 		result.clear();
-
-		try {
-			HttpResponse<String> response = Unirest.post("https://fcm.googleapis.com/fcm/send")
-					.header("Content-Type", "application/json")
-					.header("Authorization",
-							"key=AAAAhp3z7Co:APA91bHzwMP0_cx0qTcFlAUD9kN7xtTufNk_IG5QV7P9_BIJh7n9Qbg3p5rVk5G0ECbHUbRzTiJxSDSiyNGdeUzMKX_Vo6C5OBguvjAMpctFRBjSBZnf17caTlC4jKRszcOyofMc9swW5ZUIEAbhqf2Cg5iKH479VA")
-					.header("cache-control", "no-cache")
-					.body("{\n  \"to\":\n    \"eYkYAcBUWDQ:APA91bFtN1dsRd3AcqJ_LC2iTZryF-XjLe-bX3hetUiYaSRDI8KulNotmPt9wmPub5OgBdn1ciNqi8nL8crFOiOeZXDquxSugn2jDeYhDBhlo524-SIaQ9gQ7NFlga5uKtoLvXv8MgQM\",\n  \"notification\": {\n    \"title\": \"Test #15\",\n    \"body\": \"Rsf sample Test #15\"\n  }\n}")
-					.asString();
-
-			result.put("status", response.getStatus());	
+		System.out.println(pushBody);
+//		try {
+//			HttpResponse<String> response = Unirest.post("https://fcm.googleapis.com/fcm/send")
+//					.header("Content-Type", "application/json")
+//					.header("Authorization",
+//							"key=AAAAhp3z7Co:APA91bHzwMP0_cx0qTcFlAUD9kN7xtTufNk_IG5QV7P9_BIJh7n9Qbg3p5rVk5G0ECbHUbRzTiJxSDSiyNGdeUzMKX_Vo6C5OBguvjAMpctFRBjSBZnf17caTlC4jKRszcOyofMc9swW5ZUIEAbhqf2Cg5iKH479VA")
+//					.header("cache-control", "no-cache")
+//					.body("{\n  \"to\":\n    \"eYkYAcBUWDQ:APA91bFtN1dsRd3AcqJ_LC2iTZryF-XjLe-bX3hetUiYaSRDI8KulNotmPt9wmPub5OgBdn1ciNqi8nL8crFOiOeZXDquxSugn2jDeYhDBhlo524-SIaQ9gQ7NFlga5uKtoLvXv8MgQM\",\n  \"notification\": {\n    \"title\": \"Test #15\",\n    \"body\": \"Rsf sample Test #15\"\n  }\n}")
+//					.asString();
+//
+//			result.put("status", response.getStatus());	
+//			
+//		} catch (UnirestException e) {
+//			e.printStackTrace();
+//		}
 			
-		} catch (UnirestException e) {
-			e.printStackTrace();
-		}
-			
+		result.put("status", 200);	
 		msg = "INFO_OK";
 
 		return messageReturn.getRestResp(result, msg);
