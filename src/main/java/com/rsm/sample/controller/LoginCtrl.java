@@ -66,11 +66,12 @@ public class LoginCtrl {
 		try {
 			jsonInString = mapper.writeValueAsString(vo);
 
-			HttpResponse<String> response = Unirest.post("https://fcm.googleapis.com/fcm/send")
-					.header("Content-Type", "application/json")
-					.header("Authorization",
-							"key=AAAAhp3z7Co:APA91bHzwMP0_cx0qTcFlAUD9kN7xtTufNk_IG5QV7P9_BIJh7n9Qbg3p5rVk5G0ECbHUbRzTiJxSDSiyNGdeUzMKX_Vo6C5OBguvjAMpctFRBjSBZnf17caTlC4jKRszcOyofMc9swW5ZUIEAbhqf2Cg5iKH479VA")
-					.header("cache-control", "no-cache").body(jsonInString).asString();
+			HttpResponse<String> response = Unirest.post("http://10.211.55.6:8090/rsf-sample-backend/api/auth/send-push")
+					  .header("Content-Type", "application/json")
+					  .header("cache-control", "no-cache")
+					  .header("Postman-Token", "4be5a575-b63f-4fba-a5c6-a3b5c479b77e")
+					  .body("{ \"registration_ids\" : [ \"eYkYAcBUWDQ:APA91bFtN1dsRd3AcqJ_LC2iTZryF-XjLe-bX3hetUiYaSRDI8KulNotmPt9wmPub5OgBdn1ciNqi8nL8crFOiOeZXDquxSugn2jDeYhDBhlo524-SIaQ9gQ7NFlga5uKtoLvXv8MgQM\", \"fKd3ZCVxYIk:APA91bHuYu2EbMN3mZHh-_hJNDBESniVMJ-h4psk5FPPfNc876S2tecM6qLTG5rEzJGQX5Z67aI5Z7akB959GMDrHDx47kfh3wbi5StxHeDlTh0-DvdfNNweJY1umQKXHYaA_6OL2xLL\" ], \"notification\": { \"title\" : \"123456\", \"body\" : \"123456\" }, \"data\": { \"trimNo\" : \"234567\", \"model\" : \"890\", \"diverLoc\" : \"123\", \"destination\" : \"456\", \"swBzr\" : \"78\", \"rrack\" : \"90\" } }\n\n")
+					  .asString();
 
 			result.put("status", response.getStatus());
 
