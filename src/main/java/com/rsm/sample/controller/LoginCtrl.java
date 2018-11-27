@@ -56,15 +56,15 @@ public class LoginCtrl {
 
 	@PostMapping(path = "/send-push", consumes = "application/json")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> sendPush(@RequestBody PushInfoVo vo) {
+	public ResponseEntity<Map<String, Object>> sendPush() {
 
 		result.clear();
-		ObjectMapper mapper = new ObjectMapper();
-
-		String jsonInString = null;
+//		ObjectMapper mapper = new ObjectMapper();
+//
+//		String jsonInString = null;
 
 		try {
-			jsonInString = mapper.writeValueAsString(vo);
+//			jsonInString = mapper.writeValueAsString(vo);
 
 			HttpResponse<String> response = Unirest.post("http://10.211.55.6:8090/rsf-sample-backend/api/auth/send-push")
 					  .header("Content-Type", "application/json")
@@ -75,8 +75,8 @@ public class LoginCtrl {
 
 			result.put("status", response.getStatus());
 
-		} catch (JsonProcessingException e) {
-			logger.error(e.getMessage());
+//		} catch (JsonProcessingException e) {
+//			logger.error(e.getMessage());
 
 		} catch (UnirestException e) {
 			logger.error(e.getMessage());
