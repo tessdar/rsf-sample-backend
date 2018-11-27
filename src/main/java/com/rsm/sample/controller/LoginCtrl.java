@@ -56,16 +56,16 @@ public class LoginCtrl {
 
 	@PostMapping(path = "/send-push", consumes = "application/json")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> sendPush(@RequestBody PushInfoVo vo) {
+	public ResponseEntity<Map<String, Object>> sendPush() {
 
 		result.clear();
-		ObjectMapper mapper = new ObjectMapper();
-
-		String jsonInString = null;
+//		ObjectMapper mapper = new ObjectMapper();
+//
+//		String jsonInString = null;
 
 		try {
-			jsonInString = mapper.writeValueAsString(vo);
-			System.out.println(jsonInString);
+//			jsonInString = mapper.writeValueAsString(vo);
+//			System.out.println(jsonInString);
 
 			HttpResponse<String> response = Unirest.post("https://fcm.googleapis.com/fcm/send")
 					.header("Content-Type", "application/json")
@@ -77,8 +77,8 @@ public class LoginCtrl {
 
 			result.put("status", response.getStatus());
 
-		} catch (JsonProcessingException e) {
-			logger.error(e.getMessage());
+//		} catch (JsonProcessingException e) {
+//			logger.error(e.getMessage());
 
 		} catch (UnirestException e) {
 			logger.error(e.getMessage());
