@@ -65,6 +65,7 @@ public class LoginCtrl {
 		
 		try {
 			jsonInString = mapper.writeValueAsString(vo);
+			System.out.println(jsonInString);
 			
 			HttpResponse<String> response = Unirest.post("https://fcm.googleapis.com/fcm/send")
 					.header("Content-Type", "application/json")
