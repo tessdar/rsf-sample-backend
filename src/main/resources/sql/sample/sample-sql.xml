@@ -73,6 +73,19 @@
 	    ]]>
 	</select>
 
+	<select id="selectUserOne" parameterType="String" resultType="UsersVo">
+		<![CDATA[
+		SELECT USER_ID,
+		       USER_NAME,
+		       PASSWORD,
+		       USER_EMAIL,
+		       GROUP_ID,
+		       FCM_TOKEN
+		  FROM HR.USERS
+		 WHERE USER_ID = #{userId}  
+	    ]]>
+	</select>
+
 	<select id="selectDepChart" resultType="DepChartVo">
 		<![CDATA[
 		SELECT DEPARTMENT_ID, 

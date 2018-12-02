@@ -2,6 +2,7 @@ package com.rsm.sample.dao;
 
 import java.util.List;
 
+import com.rsm.common.vo.UsersVo;
 import com.rsm.sample.vo.DepChartVo;
 import com.rsm.sample.vo.DepListVo;
 import com.rsm.sample.vo.EmpListVo;
@@ -26,5 +27,7 @@ public interface SampleDao {
 	public List<DepChartVo> getDepChart();
 	
 	public List<JobChartVo> getJobChart();
+	
+	public UsersVo getUserOne(String userId);
 
 }

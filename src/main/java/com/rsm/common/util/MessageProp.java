@@ -14,7 +14,11 @@ public enum MessageProp {
     
 	INFO_SAVE("INFO_SAVE"),
 	
-	INFO_OK("INFO_OK");
+	INFO_OK("INFO_OK"),
+	
+	WRN_LOGIN_PW("WRN_LOGIN_PW"),
+	
+	WRN_LOGIN_ID("WRN_LOGIN_ID");
 	
     private String msg;
     

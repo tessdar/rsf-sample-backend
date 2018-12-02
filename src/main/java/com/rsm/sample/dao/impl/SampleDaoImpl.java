@@ -6,6 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.rsm.common.vo.UsersVo;
 import com.rsm.sample.dao.SampleDao;
 import com.rsm.sample.vo.DepChartVo;
 import com.rsm.sample.vo.DepListVo;
@@ -79,5 +80,10 @@ public class SampleDaoImpl implements SampleDao {
 	@Override
 	public List<JobChartVo> getJobChart() {		
 		return sqlSession.selectList(namespace + ".selectJobChart");
+	}
+
+	@Override
+	public UsersVo getUserOne(String userId) {
+		return sqlSession.selectOne(namespace + ".selectUserOne", userId);
 	}
 }

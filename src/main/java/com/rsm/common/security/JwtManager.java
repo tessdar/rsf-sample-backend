@@ -1,5 +1,6 @@
 package com.rsm.common.security;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
@@ -64,26 +65,10 @@ public class JwtManager {
 		}
 	}
 
-	public static void main(String[] args) {
-		 JwtManager tm = new JwtManager();
-		
-		 System.out.println(tm.createToken());
+	public static void main(String[] args) throws IOException {
+		JwtManager tm = new JwtManager();
 
-//		try {
-//			HttpResponse<String> response = Unirest.post("https://fcm.googleapis.com/fcm/send")
-//					.header("Content-Type", "application/json")
-//					.header("Authorization",
-//							"key=AAAAhp3z7Co:APA91bHzwMP0_cx0qTcFlAUD9kN7xtTufNk_IG5QV7P9_BIJh7n9Qbg3p5rVk5G0ECbHUbRzTiJxSDSiyNGdeUzMKX_Vo6C5OBguvjAMpctFRBjSBZnf17caTlC4jKRszcOyofMc9swW5ZUIEAbhqf2Cg5iKH479VA")
-//					.header("cache-control", "no-cache")
-//					.body("{\n  \"to\":\n    \"eYkYAcBUWDQ:APA91bFtN1dsRd3AcqJ_LC2iTZryF-XjLe-bX3hetUiYaSRDI8KulNotmPt9wmPub5OgBdn1ciNqi8nL8crFOiOeZXDquxSugn2jDeYhDBhlo524-SIaQ9gQ7NFlga5uKtoLvXv8MgQM\",\n  \"notification\": {\n    \"title\": \"Test #14\",\n    \"body\": \"Rsf sample Test #14\"\n  }\n}")
-//					.asString();
-//
-//			System.out.println(response.getStatus());
-//
-//		} catch (UnirestException e) {
-//			e.printStackTrace();
-//		}
-
+		System.out.println(tm.createToken());
 	}
 
 }

@@ -7,6 +7,9 @@ public class TrimInfoVo {
 	private String destination;
 	private String swBzr;
 	private String rrack;
+	private String qualChk;
+	private String qualFile;
+	private String carColor;
 
 	public String getTrimNo() {
 		return trimNo;
@@ -54,6 +57,30 @@ public class TrimInfoVo {
 
 	public void setRrack(String rrack) {
 		this.rrack = rrack;
+	}
+
+	public String getQualChk() {
+		return qualChk;
+	}
+
+	public void setQualChk(String qualChk) {
+		this.qualChk = qualChk;
+	}
+
+	public String getQualFile() {
+		return qualFile;
+	}
+
+	public void setQualFile(String qualFile) {
+		this.qualFile = qualFile;
+	}
+
+	public String getCarColor() {
+		return carColor;
+	}
+
+	public void setCarColor(String carColor) {
+		this.carColor = carColor;
 	}
 
 }

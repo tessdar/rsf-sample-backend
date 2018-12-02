@@ -11,6 +11,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.rsm.common.util.MessageProp;
+import com.rsm.common.vo.LoginVo;
+import com.rsm.common.vo.UsersVo;
 import com.rsm.sample.dao.SampleDao;
 import com.rsm.sample.service.SampleService;
 import com.rsm.sample.vo.DepChartVo;
@@ -22,7 +24,7 @@ import com.rsm.sample.vo.JobListVo;
 
 @Service
 public class SampleServiceImpl implements SampleService {
-	
+
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(SampleServiceImpl.class);
 
 	@Autowired
@@ -124,6 +126,27 @@ public class SampleServiceImpl implements SampleService {
 	@Scheduled(cron = "0 0 3 * * ?")
 	public void scheRefreshCache() {
 
+	}
+
+	@Override
+	public UsersVo getUserOne(String userId) {
+		return dao.getUserOne(userId);
+	}
+
+	@Override
+	public String chkLogin(LoginVo loginVo) throws Exception {
+
+		UsersVo usersVo = dao.getUserOne(loginVo.getUserId());
+
+		if (usersVo == null) {
+			throw new Exception(MessageProp.WRN_LOGIN_ID.getMsg());
+		}
+
+		if (!usersVo.getPassword().equals(loginVo.getPassword())) {
+			throw new Exception(MessageProp.WRN_LOGIN_PW.getMsg());
+		}
+
+		return MessageProp.INFO_OK.getMsg();
 	}
 
 }

@@ -8,6 +8,7 @@
 
 	<typeAliases>
 		<package name="com.rsm.sample.vo" />
+		<package name="com.rsm.common.vo" />
 		<package name="java.lang" />
 	</typeAliases>
 </configuration>

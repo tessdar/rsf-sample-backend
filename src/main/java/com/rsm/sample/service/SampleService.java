@@ -2,6 +2,8 @@ package com.rsm.sample.service;
 
 import java.util.List;
 
+import com.rsm.common.vo.LoginVo;
+import com.rsm.common.vo.UsersVo;
 import com.rsm.sample.vo.DepChartVo;
 import com.rsm.sample.vo.DepListVo;
 import com.rsm.sample.vo.EmpListVo;
@@ -26,6 +28,10 @@ public interface SampleService {
 	public List<DepChartVo> getDepChart();
 	
 	public List<JobChartVo> getJobChart();	
+	
+	public UsersVo getUserOne(String userId);
+	
+	public String chkLogin(LoginVo loginVo) throws Exception;
 	
 	public void scheRefreshCache();
 	
